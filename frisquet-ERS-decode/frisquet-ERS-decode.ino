@@ -11,6 +11,7 @@ String prefixe = "1100";
 void setup() {
   Serial.begin(500000);
   attachInterrupt(digitalPinToInterrupt(input), declenche, CHANGE);
+  Serial.println("Started");
 }
 
 void loop() {

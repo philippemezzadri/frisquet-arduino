@@ -1,0 +1,51 @@
+esphome:
+  name: gollum
+  includes:
+  - custom_component.h
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+  level: DEBUG
+
+# Enable Home Assistant API
+api:
+
+ota:
+  password: "xx"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Gollum Fallback Hotspot"
+    password: "xWC7YZPWeQBO"
+
+captive_portal:
+
+web_server:
+  port: 80
+  
+mqtt:
+  broker: x.x.x.x
+  username: xx
+  password: xx
+
+
+sensor:
+- platform: custom
+  lambda: |-
+    auto my_custom_sensor = new CustomComponent();
+    App.register_component(my_custom_sensor);
+    return {my_custom_sensor->boiler_mode, my_custom_sensor->boiler_setpoint};
+   
+  sensors:
+  - name: "Boiler Mode"
+  - name: "Boiler Setpoint"
+
