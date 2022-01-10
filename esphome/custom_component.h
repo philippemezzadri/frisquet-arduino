@@ -89,6 +89,10 @@ public:
 
         // subscribe to mqtt topic
         subscribe_json(MQTT_TOPIC, &CustomComponent::on_json_message);
+
+        // Init Export States
+        boiler_mode->publish_state(0);
+        boiler_setpoint->publish_state(0);
     }
 
     void loop() override
@@ -188,11 +192,11 @@ public:
             digitalWrite(ERS_PIN, LOW);
             delay(DELAY_BETWEEN_MESSAGES);
         }
-
-        // /!\ Final transition necessary to get th elast message decoded properly;
+        // /!\ Final transition necessary to get the last message decoded properly;
+        digitalWrite(ERS_PIN, HIGH);
         delayMicroseconds(2 * LONG_PULSE);
         digitalWrite(ERS_PIN, LOW);
-        publish_last_message();
+        log_last_message();
     }
 
     void serialize_byte(uint8_t byteValue, uint8_t byteIndex)
@@ -250,7 +254,7 @@ public:
         delayMicroseconds(LONG_PULSE);
     }
 
-    void publish_last_message()
+    void log_last_message()
     {
         /**
          * @brief Sends copy of the last message to home assistant as a text sensor
