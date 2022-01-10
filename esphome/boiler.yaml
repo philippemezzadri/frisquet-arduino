@@ -16,7 +16,7 @@ logger:
 api:
 
 ota:
-  password: "6e19f7fe46de7e5291f2077c9a8fbf55"
+  password: "..."
 
 wifi:
   ssid: !secret wifi_ssid
@@ -24,8 +24,8 @@ wifi:
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "Gollum Fallback Hotspot"
-    password: "xWC7YZPWeQBO"
+    ssid: "Boiler Fallback Hotspot"
+    password: "..."
 
 captive_portal:
 
@@ -35,7 +35,7 @@ web_server:
 mqtt:
   broker: 192.168.1.23
   username: homeassistant
-  password: eiThai6ooHee3eij1aef4eequoo6buCeeYuu0Ew0Jo8sei4eey0ou1gei4phai7U
+  password: ...
 
 
 sensor:
