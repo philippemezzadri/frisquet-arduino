@@ -31,7 +31,8 @@
 #include "esphome.h"
 
 #define TAG "custom"
-#define MQTT_TOPIC "frisquet"
+#define MQTT_TOPIC_MODE "boiler/mode"
+#define MQTT_TOPIC_SETPOINT "boiler/setpoint"
 
 #define DELAY_CYCLE_CMD 240000        // delay between 2 commands (4min)
 #define DELAY_CYCLE_CMD_INIT 240000   // delay for the 1st command after startup (4min)
@@ -88,7 +89,8 @@ public:
         register_service(&CustomComponent::on_send_setpoint_to_boiler, "send_setpoint_to_boiler", {"pre_heat", "heat"});
 
         // subscribe to mqtt topic
-        subscribe_json(MQTT_TOPIC, &CustomComponent::on_json_message);
+        subscribe(MQTT_TOPIC_MODE, &CustomComponent::on_message_mode);
+        subscribe(MQTT_TOPIC_SETPOINT, &CustomComponent::on_message_setpoint);
 
         // Init Export States
         boiler_mode->publish_state(0);
@@ -140,15 +142,18 @@ public:
         }
     }
 
-    void on_json_message(JsonObject &root)
+    void on_message_mode(const std::string &payload)
     {
-        ESP_LOGD(TAG, "mqtt message received");
-        if (!root.containsKey("mode") && !root.containsKey("setpoint"))
-            return;
+        ESP_LOGD(TAG, "mqtt message received on boiler/mode");
+        int mode = atoi(payload.c_str());
+        on_send_setpoint_to_boiler(mode, heatingValue);
+    }
 
-        int mode = root["mode"];
-        int setpoint = root["setpoint"];
-        on_send_setpoint_to_boiler(mode, setpoint);
+    void on_message_setpoint(const std::string &payload)
+    {
+        ESP_LOGD(TAG, "mqtt message received on boiler/setpoint");
+        int setpoint = atoi(payload.c_str());
+        on_send_setpoint_to_boiler(preHeatingValue, setpoint);
     }
 
     void blink()
@@ -272,6 +277,6 @@ public:
                 endofBuffer += sprintf(endofBuffer, "%c", ' ');
         }
 
-        ESP_LOGW(TAG, "last message: %s", buffer);
+        ESP_LOGD(TAG, "last message: %s", buffer);
     }
 };
