@@ -1,5 +1,5 @@
 esphome:
-  name: gollum
+  name: boiler
   includes:
   - custom_component.h
 
@@ -16,7 +16,7 @@ logger:
 api:
 
 ota:
-  password: "xx"
+  password: "6e19f7fe46de7e5291f2077c9a8fbf55"
 
 wifi:
   ssid: !secret wifi_ssid
@@ -33,9 +33,9 @@ web_server:
   port: 80
   
 mqtt:
-  broker: x.x.x.x
-  username: xx
-  password: xx
+  broker: 192.168.1.23
+  username: homeassistant
+  password: eiThai6ooHee3eij1aef4eequoo6buCeeYuu0Ew0Jo8sei4eey0ou1gei4phai7U
 
 
 sensor:
