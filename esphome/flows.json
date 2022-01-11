@@ -1,0 +1,774 @@
+[
+    {
+        "id": "cb9278fda8cb65fc",
+        "type": "tab",
+        "label": "Thermostat",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d8c7b1ba36a829e6",
+        "type": "mqtt out",
+        "z": "cb9278fda8cb65fc",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d74dc616f90cd09a",
+        "x": 1350,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "1c7fd886b6b332e1",
+        "type": "api-current-state",
+        "z": "cb9278fda8cb65fc",
+        "name": "current_temperature",
+        "server": "4251aed73817b881",
+        "version": 3,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "num",
+        "halt_if_compare": "is",
+        "entity_id": "sensor.temperature_du_salon",
+        "state_type": "num",
+        "blockInputOverrides": false,
+        "outputProperties": [
+            {
+                "property": "payload",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entityState"
+            },
+            {
+                "property": "data",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entity"
+            },
+            {
+                "property": "current_temperature",
+                "propertyType": "flow",
+                "value": "",
+                "valueType": "entityState"
+            }
+        ],
+        "for": "",
+        "forType": "num",
+        "forUnits": "seconds",
+        "override_topic": false,
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "x": 360,
+        "y": 400,
+        "wires": [
+            [
+                "e5084e477dd9dca8",
+                "c96abac5124ecac9"
+            ]
+        ]
+    },
+    {
+        "id": "8bb3968e615f4a19",
+        "type": "inject",
+        "z": "cb9278fda8cb65fc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "1",
+        "topic": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 400,
+        "wires": [
+            [
+                "1c7fd886b6b332e1"
+            ]
+        ]
+    },
+    {
+        "id": "e5084e477dd9dca8",
+        "type": "PID",
+        "z": "cb9278fda8cb65fc",
+        "name": "",
+        "setpoint": 21,
+        "pb": 1,
+        "ti": 9999,
+        "td": 0,
+        "integral_default": 0.5,
+        "smooth_factor": 3,
+        "max_interval": 600,
+        "enable": 1,
+        "disabled_op": 0,
+        "x": 630,
+        "y": 160,
+        "wires": [
+            [
+                "1b759635303bd30c"
+            ]
+        ]
+    },
+    {
+        "id": "54ea6ad1fc2fd52f",
+        "type": "inject",
+        "z": "cb9278fda8cb65fc",
+        "name": "Get Setpoint from context",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "setpoint",
+        "payload": "occupied_heating_setpoint",
+        "payloadType": "flow",
+        "x": 360,
+        "y": 740,
+        "wires": [
+            [
+                "e5084e477dd9dca8",
+                "717523cb2f2baa4c"
+            ]
+        ]
+    },
+    {
+        "id": "ea64a7825c71332d",
+        "type": "inject",
+        "z": "cb9278fda8cb65fc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "prop_band",
+        "payload": "3",
+        "payloadType": "num",
+        "x": 130,
+        "y": 60,
+        "wires": [
+            [
+                "e5084e477dd9dca8"
+            ]
+        ]
+    },
+    {
+        "id": "000d0115da9c7428",
+        "type": "inject",
+        "z": "cb9278fda8cb65fc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "t_integral",
+        "payload": "7200",
+        "payloadType": "num",
+        "x": 140,
+        "y": 100,
+        "wires": [
+            [
+                "e5084e477dd9dca8"
+            ]
+        ]
+    },
+    {
+        "id": "54b24b1b233979d9",
+        "type": "inject",
+        "z": "cb9278fda8cb65fc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "t_derivative",
+        "payload": "1.5",
+        "payloadType": "num",
+        "x": 140,
+        "y": 140,
+        "wires": [
+            [
+                "e5084e477dd9dca8"
+            ]
+        ]
+    },
+    {
+        "id": "34c0f763d90ba648",
+        "type": "inject",
+        "z": "cb9278fda8cb65fc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "integral_default",
+        "payload": "0.2",
+        "payloadType": "num",
+        "x": 150,
+        "y": 180,
+        "wires": [
+            [
+                "e5084e477dd9dca8"
+            ]
+        ]
+    },
+    {
+        "id": "cb03afc1f58be3b1",
+        "type": "inject",
+        "z": "cb9278fda8cb65fc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "max_interval",
+        "payload": "120",
+        "payloadType": "num",
+        "x": 150,
+        "y": 220,
+        "wires": [
+            [
+                "e5084e477dd9dca8"
+            ]
+        ]
+    },
+    {
+        "id": "99212b645681ede7",
+        "type": "inject",
+        "z": "cb9278fda8cb65fc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "smooth_factor",
+        "payload": "3",
+        "payloadType": "num",
+        "x": 150,
+        "y": 260,
+        "wires": [
+            [
+                "e5084e477dd9dca8"
+            ]
+        ]
+    },
+    {
+        "id": "50f0bcea748b5352",
+        "type": "inject",
+        "z": "cb9278fda8cb65fc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "disabled_op",
+        "payload": "0",
+        "payloadType": "num",
+        "x": 140,
+        "y": 300,
+        "wires": [
+            [
+                "e5084e477dd9dca8"
+            ]
+        ]
+    },
+    {
+        "id": "1b759635303bd30c",
+        "type": "function",
+        "z": "cb9278fda8cb65fc",
+        "name": "x100",
+        "func": "var val = msg.payload\n\nif (val > 0 && val < 0.2) {\n    val = 0.2\n}\n\nmsg.topic = \"boiler/setpoint\"\nmsg.payload = Math.round(val*100)\nvar temp = val > 0 ? Math.round(40*val+19) : 0\n\nflow.set(\"boiler_cmd\", msg.payload)\nflow.set(\"boiler_water_temp\", temp)\nflow.set(\"integral\", msg.integral)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 160,
+        "wires": [
+            [
+                "e029eecc1435a506"
+            ]
+        ]
+    },
+    {
+        "id": "7726f2ad6396bf5b",
+        "type": "inject",
+        "z": "cb9278fda8cb65fc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "120",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "boiler/mode",
+        "payload": "3",
+        "payloadType": "num",
+        "x": 1100,
+        "y": 120,
+        "wires": [
+            [
+                "d8c7b1ba36a829e6"
+            ]
+        ]
+    },
+    {
+        "id": "af77a5d17644df12",
+        "type": "inject",
+        "z": "cb9278fda8cb65fc",
+        "name": "MQTT Discvery",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "homeassistant/climate/0x03b9_frisquet_climate/config",
+        "payload": "{\"unique_id\":\"0x03b9_frisquet_climate\",\"name\":\"Chaudiere Frisquet\",\"action_topic\":\"home/boiler\",\"availability\":[{\"topic\":\"home/boiler/availability\"}],\"availability_mode\":\"all\",\"current_temperature_topic\":\"home/boiler\",\"current_temperature_template\":\"{{ value_json.local_temperature }}\",\"device\":{\"identifiers\":[\"climate_frisquet_0x03b9\"],\"manufacturer\":\"Frisquet\",\"model\":\"Hydroconfort Evolution 25/80\",\"name\":\"Frisquet Boiler Controller\"},\"json_attributes_topic\":\"home/boiler\",\"max_temp\":28,\"min_temp\":7,\"mode_command_topic\":\"home/boiler/set/system_mode\",\"mode_state_template\":\"{{ value_json.system_mode }}\",\"mode_state_topic\":\"home/boiler\",\"modes\":[\"off\",\"heat\"],\"temp_step\":0.5,\"temperature_command_topic\":\"home/boiler/set/occupied_heating_setpoint\",\"temperature_state_template\":\"{{ value_json.occupied_heating_setpoint }}\",\"temperature_state_topic\":\"home/boiler\",\"temperature_unit\":\"C\",\"action_template\":\"{% set values = { None:None,'idle':'off','heat':'heating'}  %}\\n{{ values[value_json.running_state]}}\"}",
+        "payloadType": "json",
+        "x": 1100,
+        "y": 40,
+        "wires": [
+            [
+                "d8c7b1ba36a829e6"
+            ]
+        ]
+    },
+    {
+        "id": "fa80526a9a549c40",
+        "type": "mqtt in",
+        "z": "cb9278fda8cb65fc",
+        "name": "Setpoint",
+        "topic": "home/boiler/set/occupied_heating_setpoint",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "d74dc616f90cd09a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 700,
+        "wires": [
+            [
+                "a01e17285f44df8c"
+            ]
+        ]
+    },
+    {
+        "id": "f337e5ffeafd5770",
+        "type": "inject",
+        "z": "cb9278fda8cb65fc",
+        "name": "Availability",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "home/boiler/availability",
+        "payload": "online",
+        "payloadType": "str",
+        "x": 1110,
+        "y": 80,
+        "wires": [
+            [
+                "d8c7b1ba36a829e6"
+            ]
+        ]
+    },
+    {
+        "id": "a01e17285f44df8c",
+        "type": "change",
+        "z": "cb9278fda8cb65fc",
+        "name": "To number",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$number(payload)",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "setpoint",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 410,
+        "y": 700,
+        "wires": [
+            [
+                "e5084e477dd9dca8",
+                "717523cb2f2baa4c"
+            ]
+        ]
+    },
+    {
+        "id": "5f13ef491ff446f1",
+        "type": "mqtt in",
+        "z": "cb9278fda8cb65fc",
+        "name": "System Mode",
+        "topic": "home/boiler/set/system_mode",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "d74dc616f90cd09a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 560,
+        "wires": [
+            [
+                "42fdad73fe6f5255",
+                "cb7aac9b737a94be"
+            ]
+        ]
+    },
+    {
+        "id": "717523cb2f2baa4c",
+        "type": "change",
+        "z": "cb9278fda8cb65fc",
+        "name": "occupied_heating_setpoint",
+        "rules": [
+            {
+                "t": "set",
+                "p": "occupied_heating_setpoint",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 740,
+        "y": 620,
+        "wires": [
+            [
+                "c96abac5124ecac9"
+            ]
+        ]
+    },
+    {
+        "id": "42fdad73fe6f5255",
+        "type": "change",
+        "z": "cb9278fda8cb65fc",
+        "name": "system_mode",
+        "rules": [
+            {
+                "t": "set",
+                "p": "system_mode",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 700,
+        "y": 580,
+        "wires": [
+            [
+                "c96abac5124ecac9"
+            ]
+        ]
+    },
+    {
+        "id": "cb7aac9b737a94be",
+        "type": "function",
+        "z": "cb9278fda8cb65fc",
+        "name": "Disabled",
+        "func": "var val = msg.payload\nmsg.topic = \"enable\";\nmsg.payload = val === \"off\" ? 0 : 1;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 500,
+        "wires": [
+            [
+                "e5084e477dd9dca8"
+            ]
+        ]
+    },
+    {
+        "id": "e029eecc1435a506",
+        "type": "delay",
+        "z": "cb9278fda8cb65fc",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "2",
+        "timeoutUnits": "minutes",
+        "rate": "1",
+        "nbRateUnits": "2",
+        "rateUnits": "minute",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": false,
+        "outputs": 2,
+        "x": 780,
+        "y": 280,
+        "wires": [
+            [
+                "d8c7b1ba36a829e6"
+            ],
+            [
+                "fe28b00c0cd61d0c"
+            ]
+        ]
+    },
+    {
+        "id": "fe28b00c0cd61d0c",
+        "type": "rbe",
+        "z": "cb9278fda8cb65fc",
+        "name": "Block Unchanged",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": false,
+        "property": "payload",
+        "topi": "topic",
+        "x": 1010,
+        "y": 300,
+        "wires": [
+            [
+                "d8c7b1ba36a829e6",
+                "c99f58a1a3f7c373"
+            ]
+        ]
+    },
+    {
+        "id": "c99f58a1a3f7c373",
+        "type": "function",
+        "z": "cb9278fda8cb65fc",
+        "name": "running_state",
+        "func": "var val = msg.payload\nmsg.topic = \"running_state\";\nmsg.complete = \"\"\nmsg.payload = val > 0  ? \"heat\" : \"idle\";\nflow.set(\"running_state\", msg.payload  )\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 540,
+        "wires": [
+            [
+                "c96abac5124ecac9"
+            ]
+        ]
+    },
+    {
+        "id": "d21fddca420927f9",
+        "type": "inject",
+        "z": "cb9278fda8cb65fc",
+        "name": "Get Mode from context",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "system_mode",
+        "payloadType": "flow",
+        "x": 170,
+        "y": 500,
+        "wires": [
+            [
+                "cb7aac9b737a94be",
+                "42fdad73fe6f5255"
+            ]
+        ]
+    },
+    {
+        "id": "c96abac5124ecac9",
+        "type": "function",
+        "z": "cb9278fda8cb65fc",
+        "name": "Current Context",
+        "func": "msg.topic = \"home/boiler\";\nmsg.payload = {\n    \"running_state\": flow.get(\"running_state\"),\n    \"current_temperature\": flow.get(\"current_temperature\"),\n    \"local_temperature\": flow.get(\"current_temperature\"),\n    \"system_mode\": flow.get(\"system_mode\"),\n    \"occupied_heating_setpoint\": flow.get(\"occupied_heating_setpoint\"),\n    \"boiler_cmd\": flow.get(\"boiler_cmd\"),\n    \"boiler_water_temp\": flow.get(\"boiler_water_temp\")\n};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 540,
+        "wires": [
+            [
+                "d8c7b1ba36a829e6"
+            ]
+        ]
+    },
+    {
+        "id": "d74dc616f90cd09a",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "192.168.1.23",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "4251aed73817b881",
+        "type": "server",
+        "name": "Home Assistant",
+        "version": 2,
+        "addon": true,
+        "rejectUnauthorizedCerts": true,
+        "ha_boolean": "y|yes|true|on|home|open",
+        "connectionDelay": true,
+        "cacheJson": true,
+        "heartbeat": false,
+        "heartbeatInterval": "30"
+    }
+]

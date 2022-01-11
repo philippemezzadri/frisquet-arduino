@@ -146,14 +146,16 @@ public:
     {
         ESP_LOGD(TAG, "mqtt message received on boiler/mode");
         int mode = atoi(payload.c_str());
-        on_send_setpoint_to_boiler(mode, heatingValue);
+        if (mode != preHeatingValue)
+            on_send_setpoint_to_boiler(mode, heatingValue);
     }
 
     void on_message_setpoint(const std::string &payload)
     {
         ESP_LOGD(TAG, "mqtt message received on boiler/setpoint");
         int setpoint = atoi(payload.c_str());
-        on_send_setpoint_to_boiler(preHeatingValue, setpoint);
+        if (setpoint != heatingValue)
+            on_send_setpoint_to_boiler(preHeatingValue, setpoint);
     }
 
     void blink()
