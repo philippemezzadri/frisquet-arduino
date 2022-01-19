@@ -106,6 +106,7 @@ public:
         long now = millis();
         if ((now - lastCmd > delayCycleCmd) && ((now - lastCmdMQTT < DELAY_TIMEOUT_CMD_MQTT) || (DELAY_TIMEOUT_CMD_MQTT == 0)))
         {
+            ESP_LOGD(TAG, "Sending messages");
             send_message();
             lastCmd = now;
             delayCycleCmd = DELAY_CYCLE_CMD;
@@ -146,16 +147,24 @@ public:
     {
         ESP_LOGD(TAG, "mqtt message received on boiler/mode");
         int mode = atoi(payload.c_str());
-        if (mode != preHeatingValue)
-            on_send_setpoint_to_boiler(mode, heatingValue);
+
+        // lastCmdMQTT = millis();
+        on_send_setpoint_to_boiler(mode, heatingValue);
+
+        //if (mode != preHeatingValue)
+        //    on_send_setpoint_to_boiler(mode, heatingValue);
     }
 
     void on_message_setpoint(const std::string &payload)
     {
         ESP_LOGD(TAG, "mqtt message received on boiler/setpoint");
         int setpoint = atoi(payload.c_str());
-        if (setpoint != heatingValue)
-            on_send_setpoint_to_boiler(preHeatingValue, setpoint);
+
+        // lastCmdMQTT = millis();
+        on_send_setpoint_to_boiler(preHeatingValue, setpoint);
+
+        //if (setpoint != heatingValue)
+        //    on_send_setpoint_to_boiler(preHeatingValue, setpoint);
     }
 
     void blink()

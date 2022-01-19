@@ -21,105 +21,26 @@
         "correl": "",
         "expiry": "",
         "broker": "d74dc616f90cd09a",
-        "x": 1350,
-        "y": 200,
+        "x": 1550,
+        "y": 140,
         "wires": []
-    },
-    {
-        "id": "1c7fd886b6b332e1",
-        "type": "api-current-state",
-        "z": "cb9278fda8cb65fc",
-        "name": "current_temperature",
-        "server": "4251aed73817b881",
-        "version": 3,
-        "outputs": 1,
-        "halt_if": "",
-        "halt_if_type": "num",
-        "halt_if_compare": "is",
-        "entity_id": "sensor.temperature_du_salon",
-        "state_type": "num",
-        "blockInputOverrides": false,
-        "outputProperties": [
-            {
-                "property": "payload",
-                "propertyType": "msg",
-                "value": "",
-                "valueType": "entityState"
-            },
-            {
-                "property": "data",
-                "propertyType": "msg",
-                "value": "",
-                "valueType": "entity"
-            },
-            {
-                "property": "current_temperature",
-                "propertyType": "flow",
-                "value": "",
-                "valueType": "entityState"
-            }
-        ],
-        "for": "",
-        "forType": "num",
-        "forUnits": "seconds",
-        "override_topic": false,
-        "state_location": "payload",
-        "override_payload": "msg",
-        "entity_location": "data",
-        "override_data": "msg",
-        "x": 360,
-        "y": 400,
-        "wires": [
-            [
-                "e5084e477dd9dca8",
-                "c96abac5124ecac9"
-            ]
-        ]
-    },
-    {
-        "id": "8bb3968e615f4a19",
-        "type": "inject",
-        "z": "cb9278fda8cb65fc",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "30",
-        "crontab": "",
-        "once": false,
-        "onceDelay": "1",
-        "topic": "",
-        "payloadType": "date",
-        "x": 130,
-        "y": 400,
-        "wires": [
-            [
-                "1c7fd886b6b332e1"
-            ]
-        ]
     },
     {
         "id": "e5084e477dd9dca8",
         "type": "PID",
         "z": "cb9278fda8cb65fc",
-        "name": "",
-        "setpoint": 21,
-        "pb": 1,
-        "ti": 9999,
-        "td": 0,
+        "name": "PID Controller",
+        "setpoint": "20",
+        "pb": "2",
+        "ti": "7200",
+        "td": "0",
         "integral_default": 0.5,
-        "smooth_factor": 3,
-        "max_interval": 600,
+        "smooth_factor": "2",
+        "max_interval": "120",
         "enable": 1,
         "disabled_op": 0,
-        "x": 630,
-        "y": 160,
+        "x": 720,
+        "y": 260,
         "wires": [
             [
                 "1b759635303bd30c"
@@ -147,99 +68,11 @@
         "topic": "setpoint",
         "payload": "occupied_heating_setpoint",
         "payloadType": "flow",
-        "x": 360,
-        "y": 740,
+        "x": 160,
+        "y": 320,
         "wires": [
             [
-                "e5084e477dd9dca8",
-                "717523cb2f2baa4c"
-            ]
-        ]
-    },
-    {
-        "id": "ea64a7825c71332d",
-        "type": "inject",
-        "z": "cb9278fda8cb65fc",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "topic": "prop_band",
-        "payload": "3",
-        "payloadType": "num",
-        "x": 130,
-        "y": 60,
-        "wires": [
-            [
-                "e5084e477dd9dca8"
-            ]
-        ]
-    },
-    {
-        "id": "000d0115da9c7428",
-        "type": "inject",
-        "z": "cb9278fda8cb65fc",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "topic": "t_integral",
-        "payload": "7200",
-        "payloadType": "num",
-        "x": 140,
-        "y": 100,
-        "wires": [
-            [
-                "e5084e477dd9dca8"
-            ]
-        ]
-    },
-    {
-        "id": "54b24b1b233979d9",
-        "type": "inject",
-        "z": "cb9278fda8cb65fc",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "topic": "t_derivative",
-        "payload": "1.5",
-        "payloadType": "num",
-        "x": 140,
-        "y": 140,
-        "wires": [
-            [
-                "e5084e477dd9dca8"
+                "a01e17285f44df8c"
             ]
         ]
     },
@@ -264,98 +97,11 @@
         "topic": "integral_default",
         "payload": "0.2",
         "payloadType": "num",
-        "x": 150,
-        "y": 180,
+        "x": 130,
+        "y": 80,
         "wires": [
             [
-                "e5084e477dd9dca8"
-            ]
-        ]
-    },
-    {
-        "id": "cb03afc1f58be3b1",
-        "type": "inject",
-        "z": "cb9278fda8cb65fc",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "topic": "max_interval",
-        "payload": "120",
-        "payloadType": "num",
-        "x": 150,
-        "y": 220,
-        "wires": [
-            [
-                "e5084e477dd9dca8"
-            ]
-        ]
-    },
-    {
-        "id": "99212b645681ede7",
-        "type": "inject",
-        "z": "cb9278fda8cb65fc",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "topic": "smooth_factor",
-        "payload": "3",
-        "payloadType": "num",
-        "x": 150,
-        "y": 260,
-        "wires": [
-            [
-                "e5084e477dd9dca8"
-            ]
-        ]
-    },
-    {
-        "id": "50f0bcea748b5352",
-        "type": "inject",
-        "z": "cb9278fda8cb65fc",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "topic": "disabled_op",
-        "payload": "0",
-        "payloadType": "num",
-        "x": 140,
-        "y": 300,
-        "wires": [
-            [
-                "e5084e477dd9dca8"
+                "2b82b39bd107fcf7"
             ]
         ]
     },
@@ -364,46 +110,17 @@
         "type": "function",
         "z": "cb9278fda8cb65fc",
         "name": "x100",
-        "func": "var val = msg.payload\n\nif (val > 0 && val < 0.2) {\n    val = 0.2\n}\n\nmsg.topic = \"boiler/setpoint\"\nmsg.payload = Math.round(val*100)\nvar temp = val > 0 ? Math.round(40*val+19) : 0\n\nflow.set(\"boiler_cmd\", msg.payload)\nflow.set(\"boiler_water_temp\", temp)\nflow.set(\"integral\", msg.integral)\n\nreturn msg;",
+        "func": "var val = msg.payload\n\nflow.set(\"pi_heating_demand\", Math.round(val * 100))\nflow.set(\"cached_integral\", msg.integral)\nflow.set(\"cached_proportional\", msg.proportional)\nflow.set(\"cached_derivative\", msg.derivative)\nflow.set(\"smoothed_value\", msg.smoothed_value)\n\nmsg.topic = \"boiler/setpoint\"\n\nif (val > 0 ) {\n    //val = 30  + val * 70\n    val = 100 * val\n}\n\n// msg.payload = Math.round(val / 5) * 5\nmsg.payload = Math.round(val)\n\nif(flow.get(\"system_mode\") === \"auto\")\n{\n    flow.set(\"boiler_water_temp\", msg.payload)\n    return msg;\n}\n\nreturn null",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 750,
-        "y": 160,
+        "x": 890,
+        "y": 260,
         "wires": [
             [
                 "e029eecc1435a506"
-            ]
-        ]
-    },
-    {
-        "id": "7726f2ad6396bf5b",
-        "type": "inject",
-        "z": "cb9278fda8cb65fc",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "120",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "topic": "boiler/mode",
-        "payload": "3",
-        "payloadType": "num",
-        "x": 1100,
-        "y": 120,
-        "wires": [
-            [
-                "d8c7b1ba36a829e6"
             ]
         ]
     },
@@ -426,9 +143,9 @@
         "once": true,
         "onceDelay": 0.1,
         "topic": "homeassistant/climate/0x03b9_frisquet_climate/config",
-        "payload": "{\"unique_id\":\"0x03b9_frisquet_climate\",\"name\":\"Chaudiere Frisquet\",\"action_topic\":\"home/boiler\",\"availability\":[{\"topic\":\"home/boiler/availability\"}],\"availability_mode\":\"all\",\"current_temperature_topic\":\"home/boiler\",\"current_temperature_template\":\"{{ value_json.local_temperature }}\",\"device\":{\"identifiers\":[\"climate_frisquet_0x03b9\"],\"manufacturer\":\"Frisquet\",\"model\":\"Hydroconfort Evolution 25/80\",\"name\":\"Frisquet Boiler Controller\"},\"json_attributes_topic\":\"home/boiler\",\"max_temp\":28,\"min_temp\":7,\"mode_command_topic\":\"home/boiler/set/system_mode\",\"mode_state_template\":\"{{ value_json.system_mode }}\",\"mode_state_topic\":\"home/boiler\",\"modes\":[\"off\",\"heat\"],\"temp_step\":0.5,\"temperature_command_topic\":\"home/boiler/set/occupied_heating_setpoint\",\"temperature_state_template\":\"{{ value_json.occupied_heating_setpoint }}\",\"temperature_state_topic\":\"home/boiler\",\"temperature_unit\":\"C\",\"action_template\":\"{% set values = { None:None,'idle':'off','heat':'heating'}  %}\\n{{ values[value_json.running_state]}}\"}",
+        "payload": "{\"unique_id\":\"0x03b9_frisquet_climate\",\"name\":\"Chaudiere Frisquet\",\"action_topic\":\"home/boiler\",\"availability\":[{\"topic\":\"home/boiler/availability\"}],\"availability_mode\":\"all\",\"current_temperature_topic\":\"home/boiler\",\"current_temperature_template\":\"{{ value_json.local_temperature }}\",\"device\":{\"identifiers\":[\"climate_frisquet_0x03b9\"],\"manufacturer\":\"Frisquet\",\"model\":\"Hydroconfort Evolution 25/80\",\"name\":\"Frisquet Boiler Controller\"},\"json_attributes_topic\":\"home/boiler\",\"max_temp\":28,\"min_temp\":7,\"mode_command_topic\":\"home/boiler/set/system_mode\",\"mode_state_template\":\"{{ value_json.system_mode }}\",\"mode_state_topic\":\"home/boiler\",\"modes\":[\"off\",\"heat\",\"auto\"],\"temp_step\":0.5,\"temperature_command_topic\":\"home/boiler/set/occupied_heating_setpoint\",\"temperature_state_template\":\"{{ value_json.occupied_heating_setpoint }}\",\"temperature_state_topic\":\"home/boiler\",\"temperature_unit\":\"C\",\"action_template\":\"{% set values = { None:None,'idle':'idle','heat':'heating', 'off':'off'}  %}\\n{{ values[value_json.running_state]}}\"}",
         "payloadType": "json",
-        "x": 1100,
+        "x": 1280,
         "y": 40,
         "wires": [
             [
@@ -449,8 +166,8 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 120,
-        "y": 700,
+        "x": 100,
+        "y": 360,
         "wires": [
             [
                 "a01e17285f44df8c"
@@ -478,7 +195,7 @@
         "topic": "home/boiler/availability",
         "payload": "online",
         "payloadType": "str",
-        "x": 1110,
+        "x": 1290,
         "y": 80,
         "wires": [
             [
@@ -513,11 +230,12 @@
         "to": "",
         "reg": false,
         "x": 410,
-        "y": 700,
+        "y": 360,
         "wires": [
             [
                 "e5084e477dd9dca8",
-                "717523cb2f2baa4c"
+                "717523cb2f2baa4c",
+                "1e7e700119016420"
             ]
         ]
     },
@@ -534,8 +252,8 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 130,
-        "y": 560,
+        "x": 110,
+        "y": 480,
         "wires": [
             [
                 "42fdad73fe6f5255",
@@ -562,11 +280,12 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 740,
-        "y": 620,
+        "x": 760,
+        "y": 440,
         "wires": [
             [
-                "c96abac5124ecac9"
+                "c96abac5124ecac9",
+                "775e68f9c51ede67"
             ]
         ]
     },
@@ -589,11 +308,12 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 700,
-        "y": 580,
+        "x": 720,
+        "y": 480,
         "wires": [
             [
-                "c96abac5124ecac9"
+                "c96abac5124ecac9",
+                "775e68f9c51ede67"
             ]
         ]
     },
@@ -608,8 +328,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 420,
-        "y": 500,
+        "x": 400,
+        "y": 440,
         "wires": [
             [
                 "e5084e477dd9dca8"
@@ -633,8 +353,8 @@
         "drop": true,
         "allowrate": false,
         "outputs": 2,
-        "x": 780,
-        "y": 280,
+        "x": 1140,
+        "y": 260,
         "wires": [
             [
                 "d8c7b1ba36a829e6"
@@ -656,8 +376,8 @@
         "septopics": false,
         "property": "payload",
         "topi": "topic",
-        "x": 1010,
-        "y": 300,
+        "x": 1210,
+        "y": 320,
         "wires": [
             [
                 "d8c7b1ba36a829e6",
@@ -670,14 +390,14 @@
         "type": "function",
         "z": "cb9278fda8cb65fc",
         "name": "running_state",
-        "func": "var val = msg.payload\nmsg.topic = \"running_state\";\nmsg.complete = \"\"\nmsg.payload = val > 0  ? \"heat\" : \"idle\";\nflow.set(\"running_state\", msg.payload  )\nreturn msg;",
+        "func": "var val = msg.payload\nmsg.topic = \"running_state\";\nmsg.complete = \"\"\nmsg.payload = val > 0  ? \"heat\" : \"idle\"\nflow.set(\"running_state\", msg.payload  )\nreturn msg",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 700,
-        "y": 540,
+        "x": 1300,
+        "y": 380,
         "wires": [
             [
                 "c96abac5124ecac9"
@@ -701,8 +421,8 @@
         "topic": "",
         "payload": "system_mode",
         "payloadType": "flow",
-        "x": 170,
-        "y": 500,
+        "x": 150,
+        "y": 540,
         "wires": [
             [
                 "cb7aac9b737a94be",
@@ -715,14 +435,14 @@
         "type": "function",
         "z": "cb9278fda8cb65fc",
         "name": "Current Context",
-        "func": "msg.topic = \"home/boiler\";\nmsg.payload = {\n    \"running_state\": flow.get(\"running_state\"),\n    \"current_temperature\": flow.get(\"current_temperature\"),\n    \"local_temperature\": flow.get(\"current_temperature\"),\n    \"system_mode\": flow.get(\"system_mode\"),\n    \"occupied_heating_setpoint\": flow.get(\"occupied_heating_setpoint\"),\n    \"boiler_cmd\": flow.get(\"boiler_cmd\"),\n    \"boiler_water_temp\": flow.get(\"boiler_water_temp\")\n};\nreturn msg;",
+        "func": "msg.topic = \"home/boiler\";\n\nvar mode = flow.get(\"system_mode\")\nif (mode == \"off\") {\n   flow.set(\"running_state\", \"off\")\n}\n\nif (mode == \"heat\") {\n   flow.set(\"running_state\", \"heat\")\n}\n\nmsg.payload = {\n    \"running_state\": flow.get(\"running_state\"),\n    \"current_temperature\": flow.get(\"current_temperature\"),\n    \"local_temperature\": flow.get(\"current_temperature\"),\n    \"system_mode\": flow.get(\"system_mode\"),\n    \"occupied_heating_setpoint\": flow.get(\"occupied_heating_setpoint\"),\n    \"pi_heating_demand\": flow.get(\"pi_heating_demand\"),\n    \"boiler_water_temp\": flow.get(\"boiler_water_temp\"),\n    \"heating_curve_temp\": flow.get(\"heating_curve_temp\")\n};\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 980,
-        "y": 540,
+        "x": 1400,
+        "y": 440,
         "wires": [
             [
                 "d8c7b1ba36a829e6"
@@ -730,10 +450,203 @@
         ]
     },
     {
+        "id": "775e68f9c51ede67",
+        "type": "function",
+        "z": "cb9278fda8cb65fc",
+        "name": "Heating Curve",
+        "func": "const slope = 1.8\nconst delta = 28\n\nconst heating_curve_temp = Math.round(slope *(flow.get(\"occupied_heating_setpoint\") - flow.get(\"outdoor_temp\") ) + delta)\nflow.set(\"heating_curve_temp\", heating_curve_temp)\n\nmsg.payload = Math.min(Math.round(heating_curve_temp / 5) * 5 + 5, 100)\nmsg.topic = \"boiler/setpoint\"\n\nif(flow.get(\"system_mode\") === \"heat\")\n{\n    flow.set(\"boiler_water_temp\", msg.payload)\n    return msg;\n}\n\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1040,
+        "y": 560,
+        "wires": [
+            [
+                "e029eecc1435a506"
+            ]
+        ]
+    },
+    {
+        "id": "2b82b39bd107fcf7",
+        "type": "function",
+        "z": "cb9278fda8cb65fc",
+        "name": "integral_default",
+        "func": "const cached_integral = flow.get(\"cached_integral\")\nconst prop_band = 2\n\nif (cached_integral != undefined) {\n    msg.payload = 0.5 - (cached_integral/prop_band)\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 80,
+        "wires": [
+            [
+                "e5084e477dd9dca8"
+            ]
+        ]
+    },
+    {
+        "id": "1e7e700119016420",
+        "type": "function",
+        "z": "cb9278fda8cb65fc",
+        "name": "Boiler Mode",
+        "func": "var boiler_mode = 3\n\nif (msg.payload == 7) {\n    boiler_mode = 4\n} else if (msg.payload <= 17) {\n    boiler_mode = 0\n}\n\nmsg.payload = boiler_mode\nmsg.topic = \"boiler/mode\"\n\nflow.set(\"boiler_mode\", boiler_mode)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 140,
+        "wires": [
+            [
+                "d8c7b1ba36a829e6"
+            ]
+        ]
+    },
+    {
+        "id": "356e1aefa16ef972",
+        "type": "poll-state",
+        "z": "cb9278fda8cb65fc",
+        "name": "",
+        "server": "90e080c725fc04d2",
+        "version": 2,
+        "exposeToHomeAssistant": false,
+        "haConfig": [
+            {
+                "property": "name",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": ""
+            }
+        ],
+        "updateinterval": "30",
+        "updateIntervalType": "num",
+        "updateIntervalUnits": "seconds",
+        "outputinitially": true,
+        "outputonchanged": true,
+        "entity_id": "sensor.aqara_exterieur_temperature",
+        "state_type": "num",
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "outputs": 1,
+        "x": 210,
+        "y": 680,
+        "wires": [
+            [
+                "cf1bac03f50abd17"
+            ]
+        ]
+    },
+    {
+        "id": "cf1bac03f50abd17",
+        "type": "change",
+        "z": "cb9278fda8cb65fc",
+        "name": "outdoor_temp",
+        "rules": [
+            {
+                "t": "set",
+                "p": "outdoor_temp",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 720,
+        "y": 560,
+        "wires": [
+            [
+                "775e68f9c51ede67"
+            ]
+        ]
+    },
+    {
+        "id": "c448e1548d2c4f8d",
+        "type": "poll-state",
+        "z": "cb9278fda8cb65fc",
+        "name": "",
+        "server": "90e080c725fc04d2",
+        "version": 2,
+        "exposeToHomeAssistant": false,
+        "haConfig": [
+            {
+                "property": "name",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": ""
+            }
+        ],
+        "updateinterval": "30",
+        "updateIntervalType": "num",
+        "updateIntervalUnits": "seconds",
+        "outputinitially": true,
+        "outputonchanged": true,
+        "entity_id": "sensor.aqara_salon_temperature",
+        "state_type": "num",
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "outputs": 1,
+        "x": 200,
+        "y": 620,
+        "wires": [
+            [
+                "5184fdc562a73faa",
+                "e5084e477dd9dca8"
+            ]
+        ]
+    },
+    {
+        "id": "5184fdc562a73faa",
+        "type": "change",
+        "z": "cb9278fda8cb65fc",
+        "name": "current_temperature",
+        "rules": [
+            {
+                "t": "set",
+                "p": "current_temperature",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "last_update",
+                "pt": "flow",
+                "to": "data.last_updated",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 740,
+        "y": 520,
+        "wires": [
+            [
+                "c96abac5124ecac9"
+            ]
+        ]
+    },
+    {
         "id": "d74dc616f90cd09a",
         "type": "mqtt-broker",
         "name": "",
-        "broker": "192.168.1.23",
+        "broker": "192.168.1.127",
         "port": "1883",
         "clientid": "",
         "autoConnect": true,
@@ -759,7 +672,7 @@
         "sessionExpiry": ""
     },
     {
-        "id": "4251aed73817b881",
+        "id": "90e080c725fc04d2",
         "type": "server",
         "name": "Home Assistant",
         "version": 2,

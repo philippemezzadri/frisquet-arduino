@@ -8,6 +8,8 @@ esp32:
   framework:
     type: arduino
 
+# esp32_ble_tracker:
+
 # Enable logging
 logger:
   level: DEBUG
@@ -16,7 +18,7 @@ logger:
 api:
 
 ota:
-  password: "..."
+  password: "86d8d705bb585eaf7a68c592a025884c"
 
 wifi:
   ssid: !secret wifi_ssid
@@ -25,7 +27,7 @@ wifi:
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "Boiler Fallback Hotspot"
-    password: "..."
+    password: "tzTyXUqS2i2e"
 
 captive_portal:
 
@@ -33,10 +35,12 @@ web_server:
   port: 80
   
 mqtt:
-  broker: 192.168.1.23
+  broker: 192.168.1.127
   username: homeassistant
-  password: ...
+  password: Uth8Yetheefie8okeijie1oolae9aihe3ale1biposua9kei0uW3lahlaip4Ahya
 
+dallas:
+  - pin: GPIO26
 
 sensor:
 - platform: custom
@@ -47,5 +51,15 @@ sensor:
    
   sensors:
   - name: "Boiler Mode"
+    accuracy_decimals: 0
   - name: "Boiler Setpoint"
+    unit_of_measurement: "°C"
+    accuracy_decimals: 0
+    
+- platform: dallas
+  address: 0xA2032131AB675C28
+  name: "Boiler Inlet Water Temperature"
 
+- platform: dallas
+  address: 0xAB03213190136128
+  name: "Boiler Return Water Temperature"   
