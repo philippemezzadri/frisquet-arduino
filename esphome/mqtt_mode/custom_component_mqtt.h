@@ -29,9 +29,8 @@
  */
 
 #include "esphome.h"
-using namespace esphome;
 
-#define TAG "boiler control"
+#define TAG "custom"
 #define MQTT_TOPIC_MODE "boiler/mode"
 #define MQTT_TOPIC_SETPOINT "boiler/setpoint"
 
@@ -46,11 +45,13 @@ static const uint8_t ONBOARD_LED = 2;
 static const uint8_t ERS_PIN = 5;
 static const int LONG_PULSE = 825; // micro seconds
 
-class FrisquetBoilerFloatOutput : public Component, public FloatOutput
+class CustomComponent : public Component,
+                        public CustomAPIDevice,
+                        public CustomMQTTDevice
 {
 private:
-    int pi_heating_demand = 0;
-    int operating_mode = 3;
+    int heatingValue = 0;
+    int preHeatingValue = 0;
     int previousState = LOW;
     int bitstuffCounter = 0;
 
@@ -59,6 +60,10 @@ private:
     long lastCmdMQTT = 0;
 
     uint8_t message[17] = {0x00, 0x00, 0x00, 0x7E, 0x03, 0xB9, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFD, 0x00, 0xFF, 0x00};
+
+    // Home Assistant specific attributes
+    Sensor *boiler_mode = new Sensor();
+    Sensor *boiler_setpoint = new Sensor();
 
 public:
     void setup() override
@@ -79,25 +84,17 @@ public:
         // Set boiler id
         message[4] = 0x03;
         message[5] = 0xB9;
-    }
 
-    void write_state(float state) override
-    {
-        blink();
-        ESP_LOGD(TAG, "New PI Heating demand: %.3f", state);
+        // Register service
+        register_service(&CustomComponent::on_send_setpoint_to_boiler, "send_setpoint_to_boiler", {"pre_heat", "heat"});
 
-        int new_demand;
-        new_demand = (int)(state * 100);
-        lastCmdMQTT = millis();
+        // subscribe to mqtt topic
+        subscribe(MQTT_TOPIC_MODE, &CustomComponent::on_message_mode);
+        subscribe(MQTT_TOPIC_SETPOINT, &CustomComponent::on_message_setpoint);
 
-        if (new_demand != pi_heating_demand)
-        {
-            pi_heating_demand = new_demand;
-            ESP_LOGD(TAG, "New boiler setpoint: (%i, %i)", operating_mode, pi_heating_demand);
-            send_message();
-            lastCmd = lastCmdMQTT;
-            delayCycleCmd = DELAY_REPEAT_CMD;
-        }
+        // Init Export States
+        boiler_mode->publish_state(0);
+        boiler_setpoint->publish_state(0);
     }
 
     void loop() override
@@ -114,6 +111,60 @@ public:
             lastCmd = now;
             delayCycleCmd = DELAY_CYCLE_CMD;
         }
+    }
+
+    void on_send_setpoint_to_boiler(int mode, int setpoint)
+    {
+
+        /**
+         * @brief Callback function triggered when the service is called from Home Assistant
+         * @param mode value corresponding to the boiler mode of operation : eco 0, confort 3, hors gel 4
+         * @param heat water temperature setpoint on a 0-100 scale
+         */
+
+        blink();
+        if ((setpoint <= 100) and ((mode == 0) or (mode == 3) or (mode == 4)))
+        {
+            ESP_LOGD(TAG, "new setpoint: (%i, %i)", mode, setpoint);
+            preHeatingValue = mode;
+            heatingValue = setpoint;
+
+            boiler_mode->publish_state(mode);
+            boiler_setpoint->publish_state(setpoint);
+
+            send_message();
+            lastCmd = millis();
+            lastCmdMQTT = lastCmd;
+            delayCycleCmd = DELAY_REPEAT_CMD;
+        }
+        else
+        {
+            ESP_LOGW(TAG, "new setpoint not valid: (%i, %i)", mode, setpoint);
+        }
+    }
+
+    void on_message_mode(const std::string &payload)
+    {
+        ESP_LOGD(TAG, "mqtt message received on boiler/mode");
+        int mode = atoi(payload.c_str());
+
+        // lastCmdMQTT = millis();
+        on_send_setpoint_to_boiler(mode, heatingValue);
+
+        //if (mode != preHeatingValue)
+        //    on_send_setpoint_to_boiler(mode, heatingValue);
+    }
+
+    void on_message_setpoint(const std::string &payload)
+    {
+        ESP_LOGD(TAG, "mqtt message received on boiler/setpoint");
+        int setpoint = atoi(payload.c_str());
+
+        // lastCmdMQTT = millis();
+        on_send_setpoint_to_boiler(preHeatingValue, setpoint);
+
+        //if (setpoint != heatingValue)
+        //    on_send_setpoint_to_boiler(preHeatingValue, setpoint);
     }
 
     void blink()
@@ -133,7 +184,7 @@ public:
          * @brief Emits a serie of 3 messages to the ERS input of the boiler
          */
 
-        ESP_LOGD(TAG, "sending setpoint to boiler : (%i, %i)", operating_mode, pi_heating_demand);
+        ESP_LOGD(TAG, "sending setpoint to boiler : (%i, %i)", preHeatingValue, heatingValue);
         blink();
 
         for (uint8_t msg = 0; msg < 3; msg++)
@@ -141,8 +192,8 @@ public:
             // /!\ I had to put previousState at HIGH to get the message decoded properly.
             previousState = HIGH;
             message[9] = msg;
-            message[10] = (msg == 2) ? operating_mode : operating_mode + 0x80;
-            message[11] = pi_heating_demand;
+            message[10] = (msg == 2) ? preHeatingValue : preHeatingValue + 0x80;
+            message[11] = heatingValue;
 
             int checksum = 0;
             for (uint8_t i = 4; i <= 12; i++)

@@ -8,8 +8,6 @@ esp32:
   framework:
     type: arduino
 
-# esp32_ble_tracker:
-
 # Enable logging
 logger:
   level: DEBUG
@@ -33,29 +31,22 @@ captive_portal:
 
 web_server:
   port: 80
-  
-mqtt:
-  broker: 192.168.1.127
-  username: homeassistant
-  password: Uth8Yetheefie8okeijie1oolae9aihe3ale1biposua9kei0uW3lahlaip4Ahya
 
 dallas:
   - pin: GPIO26
 
 sensor:
-- platform: custom
-  lambda: |-
-    auto my_custom_sensor = new CustomComponent();
-    App.register_component(my_custom_sensor);
-    return {my_custom_sensor->boiler_mode, my_custom_sensor->boiler_setpoint};
-   
-  sensors:
-  - name: "Boiler Mode"
-    accuracy_decimals: 0
-  - name: "Boiler Setpoint"
-    unit_of_measurement: "°C"
-    accuracy_decimals: 0
-    
+- platform: homeassistant
+  id: current_temperature
+  entity_id: sensor.aqara_salon_temperature
+  filters:
+    heartbeat: 30s
+
+- platform: pid
+  name: "Boiler water temperature setpoint"
+  type: HEAT
+  unit_of_measurement: "°C"
+
 - platform: dallas
   address: 0xA2032131AB675C28
   name: "Boiler Inlet Water Temperature"
@@ -63,3 +54,36 @@ sensor:
 - platform: dallas
   address: 0xAB03213190136128
   name: "Boiler Return Water Temperature"   
+   
+climate:
+  - platform: pid
+    id: pid_climate
+    name: "PID Climate Controller"
+    sensor: current_temperature
+    default_target_temperature: 20°C
+    heat_output: boiler_cmd
+    control_parameters:
+      kp: 0.49460
+      ki: 0.00487
+      kd: 12.56301
+    visual:
+      min_temperature: 7 °C
+      max_temperature: 28 °C
+      temperature_step: 0.5 °C
+
+switch:
+  - platform: template
+    name: "PID Climate Autotune"
+    turn_on_action:
+      - climate.pid.autotune: pid_climate
+
+output:
+- platform: custom
+  type: float
+  lambda: |-
+    auto boiler_float_output = new FrisquetBoilerFloatOutput();
+    App.register_component(boiler_float_output);
+    return {boiler_float_output};
+  outputs:
+    id: boiler_cmd
+  
